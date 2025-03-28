@@ -28,4 +28,6 @@ public interface SalesDao {
 
 	public void transactionSave(List<Sales> lstSales);
 
+	public List<Sales> getSalesView();
+
 }

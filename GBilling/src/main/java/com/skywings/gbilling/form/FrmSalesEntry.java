@@ -86,6 +86,7 @@ public class FrmSalesEntry extends JFrame implements ActionListener, KeyListener
 	private JLabel lblDateTime;
 	private JLabel lblOperatorLabel;
 	private JLabel lblMinimize, lblCallMnuHead;
+	private JLabel lblCompanyName;
 
 	private JButton btnAdd;
 	private JButton btnEntryView;
@@ -133,6 +134,8 @@ public class FrmSalesEntry extends JFrame implements ActionListener, KeyListener
 	private List<Product> lstProduct;
 	private List<SubProduct> lstSubProduct;
 	private List<MasterCommon> lstUnit;
+
+	private List<Sales> lstSalesView;
 
 	@Autowired
 	private SalesLogic salesLogic;
@@ -287,7 +290,7 @@ public class FrmSalesEntry extends JFrame implements ActionListener, KeyListener
 		tblSales.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if (e.getKeyChar() == 'd' || e.getKeyChar() == 'D') {
+				if (e.getKeyCode() == 'd' || e.getKeyCode() == 'D') {
 
 					int response = JOptionPane.showConfirmDialog(panelContent, "Are you sure to delete this row?",
 							"Confirm Deletion", JOptionPane.YES_NO_OPTION);
@@ -302,9 +305,9 @@ public class FrmSalesEntry extends JFrame implements ActionListener, KeyListener
 
 							lstSales.remove(selectedRow);
 						}
+					} else {
+						JOptionPane.showMessageDialog(panelContent, "Deletion Cancelled ..!");
 					}
-				} else {
-					JOptionPane.showMessageDialog(panelContent, "Deletion Cancelled ..!");
 				}
 
 				if (e.getKeyChar() == 'e' || e.getKeyChar() == 'E') {
@@ -392,11 +395,23 @@ public class FrmSalesEntry extends JFrame implements ActionListener, KeyListener
 
 	private void tblView() {
 
-		String[] columnNames = { "SubProduct", "Qty", "Unit", "MRP/BAG", "Rate", "NetAmount", "TaxAmount",
-				"TotalAmount" };
+		panelEntry.setVisible(false);
+		panelContent.setVisible(false);
 
-		Object[][] data1;
-		data1 = new Object[][] {};
+		String[] columnNames = { "TranNo", "TranDate", "AcctName", "Product", "Piece", "Rate", "NetAmount", "TaxAmount",
+				"TotalAmount", "DiscAmount", "Route", "VechicleNo", "EwayBillNo", "IRN Number" };
+
+		lstSalesView = salesLogic.getSalesView();
+		Object[][] data1 = new Object[lstSalesView.size()][];
+
+		for (int i = 0; i < lstSalesView.size(); i++) {
+			Sales sale = lstSalesView.get(i);
+
+			data1[i] = new Object[] { sale.getTranNo(), sale.getTranDate(), sale.getAcctName(), sale.getProName(),
+					sale.getPieces(), sale.getRate(), sale.getNetAmount(), sale.getTaxAmount(), sale.getGrossAmount(),
+					sale.getDiscAmount(), sale.getRouteName(), sale.getVechileNo(), sale.getEwayBillNo(),
+					sale.getIRNNumber() };
+		}
 
 		if (tblView == null) {
 			DefaultTableModel model = new DefaultTableModel(data1, columnNames) {
@@ -425,17 +440,60 @@ public class FrmSalesEntry extends JFrame implements ActionListener, KeyListener
 			tblView.setVisible(true);
 			tblView.addKeyListener(this);
 
-			scrPane = new JScrollPane(tblSales);
-			scrPane.setBounds(lblSalman.getX(), lblSalman.getY() + lblSalman.getHeight() + 20, 830, 180);
-			scrPane.getViewport().setBackground(color2);
-			scrPane.setVisible(true);
+			scrView = new JScrollPane(tblView);
+			scrView.setBounds(30, 200, 1850, 700);
+			scrView.getViewport().setBackground(color2);
+			scrView.setVisible(true);
 
-			panelViewDetail.add(scrPane);
+			panelViewDetail.add(scrView);
 		}
-
 	}
 
+	/*
+	 * private void tblView() {
+	 * 
+	 * String[] columnNames = { "TranNo", "TranDate", "AcctName", "Product",
+	 * "Piece", "Rate", "NetAmount", "TaxAmount", "TotalAmount", "DiscAmount",
+	 * "Route", "VechicleNo", "EwayBillNo", "IRN Number" };
+	 * 
+	 * Object[][] data1;
+	 * 
+	 * lstSalesView = SalesLogic.getSalesView(); data1 = new Object[][] {};
+	 * 
+	 * if (tblView == null) { DefaultTableModel model = new DefaultTableModel(data1,
+	 * columnNames) {
+	 * 
+	 * @Override public boolean isCellEditable(int row, int column) { return false;
+	 * } };
+	 * 
+	 * tblView = new JTable(model);
+	 * 
+	 * tblView.getColumnModel().getColumn(3).setMinWidth(0);
+	 * tblView.getColumnModel().getColumn(3).setMaxWidth(0);
+	 * tblView.getColumnModel().getColumn(3).setWidth(0);
+	 * tblView.getColumnModel().getColumn(3).setResizable(false);
+	 * 
+	 * tblView.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+	 * tblView.getTableHeader().setReorderingAllowed(false);
+	 * tblView.getTableHeader().setFont(CustomFonts.fontCalibriPlain15);
+	 * tblView.setFont(CustomFonts.fontCalibriPlain15);
+	 * tblView.setForeground(Color.BLACK);
+	 * tblView.getTableHeader().setForeground(color6);
+	 * tblView.getTableHeader().setBackground(Color.WHITE);
+	 * tblView.setRowHeight(22);
+	 * 
+	 * tblView.setVisible(true); tblView.addKeyListener(this);
+	 * 
+	 * scrPane = new JScrollPane(tblSales); scrPane.setBounds(30, 200, 1850, 700);
+	 * scrPane.getViewport().setBackground(color2); scrPane.setVisible(true);
+	 * 
+	 * panelViewDetail.add(scrPane); }
+	 * 
+	 * }
+	 */
+
 	private java.awt.Component panelContentInitoalize() {
+
 		int lblWidth = 130;
 		int lblHeight = 30;
 		int txtWidth = 120;
@@ -445,7 +503,7 @@ public class FrmSalesEntry extends JFrame implements ActionListener, KeyListener
 		panelContent.setBounds(panelLine2.getX() + 50, panelLine2.getY() + 20, 850, 500);
 		panelContent.setLayout(null);
 		panelContent.setBackground(color2);
-		panelContent.setVisible(false);
+		panelContent.setVisible(true);
 
 		panelContent.setBorder(BorderFactory.createEtchedBorder(color3, color3));
 
@@ -715,7 +773,6 @@ public class FrmSalesEntry extends JFrame implements ActionListener, KeyListener
 
 		panelContent.add(scrPane);
 		panelMain.add(panelContent);
-//		panelMain.add(tblSales);
 
 		panelContent.add(lblTranDate);
 		panelContent.add(spnTranDate);
@@ -913,7 +970,7 @@ public class FrmSalesEntry extends JFrame implements ActionListener, KeyListener
 		int btnWidth = 50;
 		int btnHeight = 20;
 		panelButton = new JPanel();
-		panelButton.setBounds(0, panelContent.getY() + panelContent.getHeight() + 18, 1000, 40);
+		panelButton.setBounds(0, panelContent.getY() + panelContent.getHeight() + 25, 1000, 40);
 		panelButton.setLayout(null);
 		panelButton.setBackground(color3);
 //		panelButton.setBorder(BorderFactory.createEtchedBorder(color3, color3));
@@ -1088,6 +1145,28 @@ public class FrmSalesEntry extends JFrame implements ActionListener, KeyListener
 		lblCallMnuHead.setForeground(fontColor1);
 		lblCallMnuHead.setVisible(true);
 
+		lblCompanyName = new JLabel("SREE SENTHOOR MURUGAN TRADERS");
+		lblCompanyName.setBounds(lblCallMnuHead.getX() + 750, lblCallMnuHead.getY(), 260, 50);
+		// lblHeading.setBounds(panelDetail.getWidth() / 2, panelDetail.getY() / 2, 20,
+		// 20);
+		lblCompanyName.setFont(skywingsFont.getFont(FontStyle.BOLD, 23));
+		lblCompanyName.setForeground(Color.decode("#FF0000"));
+//		lblCompanyName.setVisible(true);
+
+		// Create a Timer that fires every 1000 milliseconds (1 second)
+		javax.swing.Timer timer = new javax.swing.Timer(1000, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Toggle the visibility of the label on every timer tick
+				lblCompanyName.setVisible(!lblCompanyName.isVisible());
+			}
+		});
+
+		// Start the timer
+		timer.start();
+
+		panelDetail.add(lblCompanyName);
+
 		// panelDetail.add(lblHeading);
 		panelDetail.add(lblCallMnuHead);
 		panelMain.add(panelDetail);
@@ -1242,6 +1321,18 @@ public class FrmSalesEntry extends JFrame implements ActionListener, KeyListener
 		} else if (e.getSource() == btnEntryView) {
 
 			panelContent.setEnabled(false);
+
+			tblView();
+
+			btnCancel.setEnabled(false);
+			btnBack.setEnabled(true);
+
+		} else if (e.getSource() == btnBack) {
+
+			panelContent.setVisible(true);
+			panelEntry.setVisible(true);
+			btnCancel.setEnabled(true);
+			btnBack.setEnabled(false);
 
 		}
 

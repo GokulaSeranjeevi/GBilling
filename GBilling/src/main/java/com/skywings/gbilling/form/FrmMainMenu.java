@@ -804,9 +804,9 @@ public class FrmMainMenu extends JFrame implements ActionListener {
 			} else if (e.getSource() == btnEInvoice) {
 
 				setVisible(false);
-//				FrmDevCallAssign frmDevCallAssign = Applicationmain.getAbstractApplicationContext()
-//						.getBean(FrmDevCallAssign.class);
-//				frmDevCallAssign.setVisible(true);
+				FrmEInvoice frmEinvoice = Applicationmain.getAbstractApplicationContext()
+						.getBean(FrmEInvoice.class);
+				frmEinvoice.setVisible(true);
 
 			} else if (e.getSource() == btnReports) {
 

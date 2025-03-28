@@ -56,4 +56,8 @@ public class SalesLogic {
 
 	}
 
+	public List<Sales> getSalesView() {
+		return salesDao.getSalesView();
+	}
+
 }

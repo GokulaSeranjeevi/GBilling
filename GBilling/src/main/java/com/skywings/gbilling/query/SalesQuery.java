@@ -58,4 +58,16 @@ public class SalesQuery {
 		return sb.toString();
 	}
 
+	public String getSalesView() {
+
+		sb = new StringBuilder("");
+		sb.append(
+				"Select TranNo,TranDate,AcctName,P.ProName, Pieces,Rate,NetAmount,TaxAmount,GrossAmount,DiscAmount,C.Description Route,VechileNo,EwayBillNo,IRNNumber from Sales S\r\n"
+						+ "Left Join MKSGMaster.dbo.CityMaster C On C.CityCode = S.RouteId\r\n"
+						+ "Left Join MKSGMaster.dbo.Operator O On O.OperCode = S.SalMan\r\n"
+						+ "Left Join MKSGMaster.dbo.Product P On P.ProCode = S.Procode\r\n" + "");
+
+		return sb.toString();
+	}
+
 }

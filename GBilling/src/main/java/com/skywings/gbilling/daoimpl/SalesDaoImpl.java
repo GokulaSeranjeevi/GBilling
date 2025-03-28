@@ -246,4 +246,38 @@ public class SalesDaoImpl implements SalesDao {
 		}
 	}
 
+	@Override
+	public List<Sales> getSalesView() {
+		List<Sales> lstSales;
+
+		lstSales = secJdbcTemplate.query(salesQuery.getSalesView(), new SalesViewRowMapper());
+
+		return lstSales;
+	}
+
+	class SalesViewRowMapper implements RowMapper<Sales> {
+		@Override
+		public Sales mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+			Sales sales = new Sales();
+
+			sales.setTranNo(rs.getInt("TranNo"));
+			sales.setTranDate(rs.getString("TranDate"));
+			sales.setAcctName(rs.getString("AcctName"));
+			sales.setProName(rs.getString("ProName"));
+			sales.setPieces(rs.getDouble("Pieces"));
+			sales.setRate(rs.getDouble("Rate"));
+			sales.setNetAmount(rs.getDouble("NetAmount"));
+			sales.setTaxAmount(rs.getDouble("TaxAmount"));
+			sales.setGrossAmount(rs.getDouble("GrossAmount"));
+			sales.setDiscAmount(rs.getDouble("DiscAmount"));
+			sales.setRouteName(rs.getString("Route"));
+			sales.setVechileNo(rs.getString("VechileNo"));
+			sales.setEwayBillNo(rs.getString("EwayBillNo"));
+			sales.setIRNNumber(rs.getString("IRNNumber"));
+
+			return sales;
+		}
+	}
+
 }
