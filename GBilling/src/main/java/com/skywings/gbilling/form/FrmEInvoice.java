@@ -140,7 +140,7 @@ public class FrmEInvoice extends JFrame implements ActionListener, KeyListener {
 
 	@Autowired
 	private EInvoiceLogic einvoiceLogic;
-
+	@Autowired
 	private CreateJsonFile createJsonFile;
 
 	private Color fontColor1 = Color.decode("#17202A");
