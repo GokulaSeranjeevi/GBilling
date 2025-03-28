@@ -1281,7 +1281,7 @@ public class FrmEInvoice extends JFrame implements ActionListener, KeyListener {
 
 		else if (e.getSource() == btnSave) {
 
-			einvoiceLogic.transactionSave(lstSales);
+//			einvoiceLogic.transactionSave(lstSales);
 
 			loadInitialize();
 
