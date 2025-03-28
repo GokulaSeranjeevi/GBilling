@@ -4,59 +4,41 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 
-public class CreateJsonFile {
-	public static void main(String[] args) {
-		// Create a sample Java object
-		Person person = new Person("John", "Doe", 30);
+import org.springframework.stereotype.Component;
 
-		// Create ObjectMapper instance
+@Component
+public class CreateJsonFile {
+
+	// Method to create JSON file from the Invoice object
+	public void createInvoiceJson() {
+		// Create an Invoice object and set data
+		Invoice invoice = new Invoice();
+		invoice.setVersion("1.1");
+
+		// Create TranDtls, DocDtls, SellerDtls, BuyerDtls, ItemList, and ValDtls
+		Invoice.TranDtls tranDtls = new Invoice.TranDtls();
+		tranDtls.setTaxSch("GST");
+		tranDtls.setSupTyp("B2B");
+		tranDtls.setRegRev("N");
+		tranDtls.setEcmGstin(null);
+		tranDtls.setIgstOnIntra("N");
+		invoice.setTranDtls(tranDtls);
+
+		Invoice.DocDtls docDtls = new Invoice.DocDtls();
+		docDtls.setTyp("INV");
+		docDtls.setNo("PSM25SA/105909");
+		docDtls.setDt("28/02/2025");
+		invoice.setDocDtls(docDtls);
+
+		// Create ObjectMapper to convert Java object to JSON
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		try {
 			// Write the object to a JSON file
-			objectMapper.writeValue(new File("person.json"), person);
+			objectMapper.writeValue(new File("invoice.json"), invoice);
 			System.out.println("JSON file created successfully!");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-}
-
-// Define a Person class
-class Person {
-	private String firstName;
-	private String lastName;
-	private int age;
-
-	// Constructor
-	public Person(String firstName, String lastName, int age) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.age = age;
-	}
-
-	// Getters and Setters
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public int getAge() {
-		return age;
-	}
-
-	public void setAge(int age) {
-		this.age = age;
 	}
 }

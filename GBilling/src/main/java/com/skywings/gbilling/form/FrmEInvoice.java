@@ -140,6 +140,9 @@ public class FrmEInvoice extends JFrame implements ActionListener, KeyListener {
 
 	@Autowired
 	private EInvoiceLogic einvoiceLogic;
+
+	private CreateJsonFile createJsonFile;
+
 	private Color fontColor1 = Color.decode("#17202A");
 	private ControlResize controlResize;
 
@@ -1316,6 +1319,10 @@ public class FrmEInvoice extends JFrame implements ActionListener, KeyListener {
 		} else if (e.getSource() == btnEntryView) {
 
 //			panelContent.setEnabled(false);
+
+		} else if (e.getSource() == btnJson) {
+
+			createJsonFile.createInvoiceJson();
 
 		}
 
